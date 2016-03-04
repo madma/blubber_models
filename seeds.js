@@ -2,28 +2,32 @@ var mongoose = require("mongoose");
 
 mongoose.connect("mongodb://localhost/blubber_app");
 
-//  SCHEMA
-var userSchema = new mongoose.Schema({
-  name       : {type: String, required: true},
-  email      : {type: String, required: true},
-  // password: String,
-  moderator  : {type: Boolean, default: false}
-});
+var User = require("./models/User");
+var Thread = require("./models/Thread");
 
+Thread.remove({}, function(err, results) {
+  User.remove({}, function(err, results) {
+    User.create([
+        {name: "John Marshall", email: "jm@us.courts.gov", moderator: true},
+        {name: "Oliver Wendell Holms", email: "owh@us.courts.gov", moderator: false},
+        {name: "Thurgood Marshall", email: "tm@us.courts.gov", moderator: false},
+        {name: "Sandra Day O'Connor", email: "sdo@us.courts.gov", moderator: false}
+      ], function(err, users) {
+      if (err) console.log();
 
-// MODEL
-var User = mongoose.model("User", userSchema);
+      console.log(users);
 
-User.remove({}, function(err, results) {
-  User.create([
-      {name: "John Marshall", email: "jm@us.courts.gov", moderator: true},
-      {name: "Oliver Wendell Holms", email: "owh@us.courts.gov", moderator: false},
-      {name: "Thurgood Marshall", email: "tm@us.courts.gov", moderator: false},
-      {name: "Sandra Day O'Connor", email: "sdo@us.courts.gov", moderator: false}
-    ], function(err, results) {
-    if (err) console.log();
-    console.log(results);
-    mongoose.connection.close();
+      var john = users[0];
+
+      // create threads
+      Thread.create(
+        {name: "YOLO", creator: john},
+        function(err, thread) {
+          if (err) console.log(err);
+          console.log(thread.creator);
+          mongoose.connection.close();
+        });
+    });
   });
 });
 
