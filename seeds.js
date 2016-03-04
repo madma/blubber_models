@@ -22,8 +22,8 @@ Thread.remove({}, function(err, results) {
 
       // create threads
       Thread.create([
-        {name: "YOLO", creator: john},
-        {name: "Think Different", creator: thur}
+        {name: "YOLO", creator: john, creatorName: john.name},
+        {name: "Think Different", creator: thur, creatorName: thur.name}
         ],
         function(err, thread) {
           if (err) console.log(err);
